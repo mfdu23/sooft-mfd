@@ -25,4 +25,8 @@ public class ServicioEmpresa {
 		return repositorioEmpresa.obtenerEmpresasFechaAdhesionUltimoMes(fechaLimite);		
 	}
 	
+	public List<Empresa> obtenerEmpresas(){
+		return repositorioEmpresa.findAll();
+	}
+	
 }

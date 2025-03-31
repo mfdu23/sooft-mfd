@@ -11,5 +11,5 @@ import com.soofttech.soof.models.Empresa;
 
 public interface RepositorioEmpresa extends JpaRepository<Empresa, Long>{
 	@Query("SELECT e FROM Empresa e WHERE e.fechaAdhesion >= :fechaLimite")
-	List<Empresa> obtenerEmpresasFechaAdhesionUltimoMes(@Param("fechaLimite") LocalDateTime fechaLimite);
+	List<Empresa> obtenerEmpresasFechaAdhesionUltimoMes(@Param("fechaLimite") LocalDateTime fechaLimite);	
 }

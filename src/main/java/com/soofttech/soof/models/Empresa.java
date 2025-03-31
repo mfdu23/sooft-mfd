@@ -1,7 +1,6 @@
 package com.soofttech.soof.models;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +14,18 @@ public class Empresa {
 	private String cuil;
 	private String razonSocial;
 	private LocalDateTime fechaAdhesion;
+	
+	public Empresa() {
+		super();
+	}
+	
+	public Empresa(Long id, String cuil, String razonSocial, LocalDateTime fechaAdhesion) {
+		super();
+		this.id = id;
+		this.cuil = cuil;
+		this.razonSocial = razonSocial;
+		this.fechaAdhesion = fechaAdhesion;
+	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
