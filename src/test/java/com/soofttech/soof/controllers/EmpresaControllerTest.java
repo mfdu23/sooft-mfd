@@ -1,12 +1,11 @@
 package com.soofttech.soof.controllers;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,22 +50,23 @@ class EmpresaControllerTest {
 
     @Test
 	void testCrear() throws JsonProcessingException, Exception {
-    	Empresa empresa = new Empresa();
-        empresa.setCuil("20-12345678-9");
-        empresa.setRazonSocial("Empresa Test");
-        empresa.setFechaAdhesion(LocalDateTime.now());
+    	// Simulamos que el servicio recibe una empresa y no devuelve nada (void)
+        Mockito.doNothing().when(servicioEmpresa).crear(Mockito.any(Empresa.class));
 
-        // Simular el servicio sin hacer nada
-        doNothing().when(servicioEmpresa).crear(any(Empresa.class));
+        String empresaJson = """
+        {
+            "cuit": "30-12345678-9",
+            "razonSocial": "Empresa Test SA",
+            "fechaAdhesion": "2024-03-01T12:00:00"
+        }
+        """;
 
-        // Realizamos la solicitud POST y verificamos el resultado
-        mockMvc.perform(post("/empresa/crear")
+        mockMvc.perform(post("/empresa/crear") // La URL del endpoint
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(empresa)))
-                .andExpect(status().isOk());  // Verifica que la respuesta tiene status 200 OK
-
-        // Verificamos que el servicio fue llamado
-        verify(servicioEmpresa).crear(any(Empresa.class)); 
+                .content(empresaJson))
+                .andDo(print()) // Esto imprime la respuesta en consola
+                .andExpect(status().isOk()) // Verificamos que la respuesta sea 200 OK
+                .andExpect(content().string("Usuario Creado")); // Verificamos el mensaje devuelto 
 	}
 
 	@Test
